@@ -57,6 +57,11 @@ function updateTimer() {
 
 function endGame() {
     document.getElementById("jogo").style.display = "none";
-    window.alert("Game Over! Your score is: " + score);
+    document.getElementById("final-score").innerText = "Your score is: " + score;
+    document.getElementById("game-over").style.display = "flex";
+}
+
+function restartGame() {
+    document.getElementById("game-over").style.display = "none";
     document.getElementById("menu").style.display = "inline";
 }
