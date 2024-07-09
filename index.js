@@ -21,8 +21,12 @@ function startGame() {
     } else {
         document.getElementById("dificuldades").style.display = "none";
         document.getElementById("jogo").style.display = "inline";
+        score = 0;
+        timeLeft = 30;
+        document.getElementById('background-music').play();
         updateScore();
         updateTimer();
+        updateHighScore();
         placeSquare();
         timer = setInterval(updateTimer, 1000);
         if (op === 0) { // Easy
@@ -76,11 +80,21 @@ function updateTimer() {
 
 function endGame() {
     document.getElementById("jogo").style.display = "none";
+    document.getElementById('background-music').pause();
     document.getElementById('game-over-sound').play();
     document.getElementById("final-score").innerText = "Your score is: " + score;
+    updateHighScore();
     document.getElementById("game-over").style.display = "flex";
 }
 
+function updateHighScore() {
+    var highScore = localStorage.getItem('highScore') || 0;
+    if (score > highScore) {
+        highScore = score;
+        localStorage.setItem('highScore', highScore);
+    }
+    document.getElementById("high-score").innerText = "High Score: " + highScore;
+}
 function restartGame() {
     document.getElementById("game-over").style.display = "none";
     document.getElementById("menu").style.display = "inline";

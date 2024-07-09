@@ -80,6 +80,13 @@ button:active {
     justify-content: center;
     align-items: center;
 }
+#high-score {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    color: #ffffff;
+}
 @media (max-width: 600px) {
     #tit {
         font-size: 30pt;
@@ -88,7 +95,7 @@ button:active {
         font-size: 25px;
         margin-top: 120px;
     }
-    #score, #timer {
+    #score, #timer, #high-score{
         font-size: 15px;
     }
     .square {
