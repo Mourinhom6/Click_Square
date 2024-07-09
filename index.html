@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Click Square</title>
     <link rel="stylesheet" href="index.css">
+    <script src="index.js"></script>
 </head>
 <body>
     <div id="menu">
@@ -17,8 +18,10 @@
         <label><input type="radio" name="op" id="op2" onclick="setDifficulty(1)">MÉDIO</label>
         <label><input type="radio" name="op" id="op3" onclick="setDifficulty(2)">DIFÍCIL</label>
         <label><input type="radio" name="op" id="op4" onclick="setDifficulty(3)">MODO ESPECIAL</label>
+        <button onclick="startGame()">JOGAR</button>
     </div>
     <div id="jogo">
+        <div class="square" id="square"></div>
     </div>
 </body>
 </html>
