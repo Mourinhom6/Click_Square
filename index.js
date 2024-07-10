@@ -77,14 +77,29 @@ function updateTimer() {
         endGame();
     }
 }
+function tryAgainFunction() {
+    closeNav();
+    startGame();
+}
+
+function togglePause() {
+    gamePaused = !gamePaused;
+}
+
+function toggleMute() {
+    const isMuted = music1.muted;
+    music1.muted = !isMuted;
+    music2.muted = !isMuted;
+    music3.muted = !isMuted;
+    music4.muted = !isMuted;
+    muteButton.src = isMuted ? 'sound.png' : 'mute.png';
+}
 
 function endGame() {
-    document.getElementById("jogo").style.display = "none";
-    document.getElementById('background-music').pause();
-    document.getElementById('game-over-sound').play();
-    document.getElementById("final-score").innerText = "Your score is: " + score;
-    updateHighScore();
-    document.getElementById("game-over").style.display = "flex";
+    clearInterval(gameInterval);
+    clearTimeout(gameTimeout);
+    openNav();
+    document.getElementById("pontfn").textContent = `A sua pontuação total é: ${score}`;
 }
 
 function updateHighScore() {

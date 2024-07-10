@@ -30,21 +30,25 @@
         </div>
     </div>
     <div id="jogo">
-        <div id="score">Score: 0</div>
-        <div id="timer">Time: 30</div>
-        <div id="high-score">High Score: 0</div>
-        <div class="square" id="square" onclick="handleSquareClick()"></div>
-    </div>
-    <div id="game-over">
-        <div>
-            <p>Game Over!</p>
-            <p id="final-score">Your score is: 0</p>
-            <button onclick="restartGame()">Restart</button>
+        <div id="butoes">
+            <i id="left-arrow" class="bi bi-arrow-return-left"></i>
+            <i id="pause-button" class="bi bi-pause-circle"></i>
+        </div>
+        <canvas id="game-canvas" width="900px" height="350px"></canvas>
+        <div id="soundbar">
+            <img id="mute-button" src="sound.png" alt="sound">
+            <h1>Score: <span id="score">0</span> Time: <span id="timer">60</span> seconds</h1>
         </div>
     </div>
-    <audio id="click-sound" src="click.mp3"></audio>
-    <audio id="game-over-sound" src="game-over.mp3"></audio>
-    <audio id="background-music" src="background.mp3" loop></audio>
+    <div id="myNav" class="overlay">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <div class="overlay-content">
+            <img id="gmoverimg" src="gameover.png" alt="game-over">
+            <h2 id="pontfn">A sua pontuação total é:</h2>
+            <a id="try-again-nav" href="#">Tentar Novamente</a>
+            <a id="back-menu-nav" href="#">Voltar ao Menu</a>
+        </div>
+    </div>
 </body>
 </html>
 
