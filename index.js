@@ -63,34 +63,60 @@ function setDifficulty(difficulty) {
 }
 
 function startGame() {
-    if (op === -1) {
-        window.alert("Ainda não selecionou o modo de jogo");
-    } else {
-        document.getElementById("dificuldades").style.display = "none";
-        document.getElementById("jogo").style.display = "inline";
-        score = 0;
-        timeLeft = 30;
-        document.getElementById('background-music').play();
-        updateScore();
-        updateTimer();
-        updateHighScore();
-        placeSquare();
-        timer = setInterval(updateTimer, 1000);
-        switch (op) {
-            case 0:
-                music1.play();
-                break;
-            case 1:
-                music2.play();
-                break;
-            case 2:
-                music3.play();
-                break;
-            case 3:
-                music4.play();
-                break;
-        }
+    if (op === -1) return;
+    document.getElementById("dificuldades").style.display = "none";
+    document.getElementById("jogo").style.display = "inline";
+    score = 0;
+    elapsedTime = 30;
+    scoreElement.textContent = score;
+    timerElement.textContent = gameDuration;
+    gameInterval = setInterval(updateGame, 1000 / 60);
+    gameTimeout = setTimeout(endGame, gameDuration * 1000);
+    squares = [];
+    switch (op) {
+        case 0:
+            music1.play();
+            break;
+        case 1:
+            music2.play();
+            break;
+        case 2:
+            music3.play();
+            break;
+        case 3:
+            music4.play();
+            break;
     }
+}
+function updateGame() {
+    if (gamePaused) return;
+    elapsedTime += 1 / 60;
+    timerElement.textContent = (gameDuration - elapsedTime).toFixed(0);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (elapsedTime * 1000 % spawnInterval < 16.67) {
+        spawnSquare();
+    }
+
+    squares.forEach(square => {
+        square.y += inispecial[op];
+        ctx.fillStyle = square.color;
+        ctx.fillRect(square.x, square.y, square.size, square.size);
+        if (square.y > canvas.height) {
+            endGame();
+        }
+    });
+
+    squares = squares.filter(square => square.y <= canvas.height);
+
+    saveSession();
+}
+
+function spawnSquare() {
+    const x = Math.random() * (canvas.width - squareSize);
+    const y = -squareSize;
+    const color = colorsort[Math.floor(Math.random() * colorsort.length)];
+    squares.push({ x, y, size: squareSize, color });
 }
 
 function placeSquare() {
@@ -129,6 +155,34 @@ function updateTimer() {
     }
 }
 
+function saveSession() {
+    const sessionData = {
+        op,
+        score,
+        elapsedTime,
+        squares,
+        music1Time: music1.currentTime,
+        music2Time: music2.currentTime,
+        music3Time: music3.currentTime,
+        music4Time: music4.currentTime
+    };
+    localStorage.setItem('sessionData', JSON.stringify(sessionData));
+}
+
+function loadSession() {
+    const sessionData = JSON.parse(localStorage.getItem('sessionData'));
+    if (sessionData) {
+        op = sessionData.op;
+        score = sessionData.score;
+        elapsedTime = sessionData.elapsedTime;
+        squares = sessionData.squares;
+        music1.currentTime = sessionData.music1Time;
+        music2.currentTime = sessionData.music2Time;
+        music3.currentTime = sessionData.music3Time;
+        music4.currentTime = sessionData.music4Time;
+    }
+}
+
 function backMenuFunction() {
     closeNav();
     document.getElementById("jogo").style.display = "none";
@@ -139,11 +193,6 @@ function backMenuFunction() {
     elapsedTime = 0;
     gamePaused = false;
     squares = [];
-}
-
-function tryAgainFunction() {
-    closeNav();
-    startGame();
 }
 
 function tryAgainFunction() {
