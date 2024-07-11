@@ -32,7 +32,11 @@ const maxSquares = 10;
 const gameDuration = 60;
 let elapsedTime = 0;
 let squares = [];
-const squareSize = 20 * 2.5;
+const squareSize = 20 * ascsize[op];
+scoreElement.textContent = parseInt(0);
+function sessaolog(){
+    window.location.href = "bkoficebig.php";
+}
 const spawnInterval = 1000 / 4;
 const gameEndScore = 0;
 let score = 0;
@@ -214,10 +218,16 @@ function toggleMute() {
 }
 
 function endGame() {
-    clearInterval(gameInterval);
-    clearTimeout(gameTimeout);
-    openNav();
-    document.getElementById("pontfn").textContent = `A sua pontuação total é: ${score}`;
+    clearInterval(squareInterval);
+    clearTimeout(createSquareInterval);
+    if(op==3){canvas.removeEventListener('click', movecatcher);}   //mode in Developement
+        music1.pause();
+        music2.pause();
+        music3.pause();
+        music4.pause();
+        isMuted = true; // Mute the music
+        toggleMute();
+        openNav();
 }
 
 function updateHighScore() {
