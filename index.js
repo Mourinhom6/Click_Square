@@ -215,7 +215,106 @@ function startGame() {
                 drawCatcher();
             }
         } 
+        else {
+            for (let i = 0; i < squares.length; i++) {
+                const square = squares[i];
+                switch (square.direction) {
+                    case 'horizontal-right':
+                        square.x += square.speed;
+                        if (square.x + squareSize > canvas.width) {
+                            square.direction = 'horizontal-left';
+                            square.x = canvas.width - squareSize;
+                        }
+                        break;
+                    case 'horizontal-left':
+                        square.x -= square.speed;
+                        if (square.x < 0) {
+                            square.direction = 'horizontal-right';
+                            square.x = 0;
+                        }
+                        break;
+                    case 'vertical-down':
+                        square.y += square.speed;
+                        if (square.y + squareSize > canvas.height) {
+                            square.direction = 'vertical-up';
+                            square.y = canvas.height - squareSize;
+                        }
+                        break;
+                    case 'vertical-up':
+                        square.y -= square.speed;
+                        if (square.y < 0) {
+                            square.direction = 'vertical-down';
+                            square.y = 0;
+                        }
+                        break;
+                    case 'diagonal-right-up':
+                        square.x += square.speed;
+                        square.y -= square.speed;
+                        if (square.x + squareSize > canvas.width) {
+                            square.direction = 'diagonal-left-up';
+                            square.x = canvas.width - squareSize;
+                        }
+                        if (square.y < 0) {
+                            square.direction = 'diagonal-right-down';
+                            square.y = 0;
+                        }
+                        break;
+                    case 'diagonal-right-down':
+                        square.x += square.speed;
+                        square.y += square.speed;
+                        if (square.x + squareSize > canvas.width) {
+                            square.direction = 'diagonal-left-down';
+                            square.x = canvas.width - squareSize;
+                        }
+                        if (square.y + squareSize > canvas.height) {
+                            square.direction = 'diagonal-right-up';
+                            square.y = canvas.height - squareSize;
+                        }
+                        break;
+                    case 'diagonal-left-up':
+                        square.x -= square.speed;
+                        square.y -= square.speed;
+                        if (square.x < 0) {
+                            square.direction = 'diagonal-right-up';
+                            square.x = 0;
+                        }
+                        if (square.y < 0) {
+                            square.direction = 'diagonal-left-down';
+                            square.y = 0;
+                        }
+                        break;
+                    case 'diagonal-left-down':
+                        square.x -= square.speed;
+                        square.y += square.speed;
+                        if (square.x < 0) {
+                            square.direction = 'diagonal-right-down';
+                            square.x = 0;
+                        }
+                        if (square.y + squareSize > canvas.height) {
+                            square.direction = 'diagonal-left-up';
+                            square.y = canvas.height - squareSize;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                square.draw();
+            }
+        }
     }
+    function movecatcherBoundaries(){   //mode in Developement
+        if (squarecathcer.x < 0) {squarecathcer.x = 0;}
+        if (squarecathcer.x + squareSize > canvas.width) {squarecathcer.x = canvas.width - squareSize;}
+        if (squarecathcer.y < 0) {squarecathcer.y = 0;}
+        if (squarecathcer.y + squareSize > canvas.height) {squarecathcer.y = canvas.height - squareSize;}
+    }
+    function random() { //function responsible for turning the game more random
+        var randombcolr = Math.floor((Math.random() * inicolor[op]) + 1); //sets a random probabily of inicolor[op]/nºfps
+        if (randombcolr == 2) { //related back color
+            canvas.style.backgroundColor = colorsort[Math.floor((Math.random() * colorsort.length) + 1)];
+        }
+    } 
+}
 
 
 
