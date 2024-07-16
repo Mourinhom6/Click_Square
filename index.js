@@ -91,29 +91,44 @@ function startGame() {
             music4.play();
             break;
     }
-}
-function updateGame() {
-    if (gamePaused) return;
-    elapsedTime += 1 / 60;
-    timerElement.textContent = (gameDuration - elapsedTime).toFixed(0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    document.getElementById("dificuldades").style.display = "none";
+    document.getElementById("jogo").style.display = "flex";
+    squarecathcer;
+    elapsedTime = 0;
+    squares = [];
+    let isPaused = false;
+    let isMuted = false;
+    let ishadowrepeat = false;  //add (to compare between noidea and alltogether)
+    let specialSquare = null;
+    let catcher= false; //mode in Developement
+    let navopen=false;
+    let squareInterval;
+    let createSquareInterval;
+    const squareSize = 20 * ascsize[op];
+    scoreElement.textContent = parseInt(0);
+    function createSquare() {
+        if (!isPaused && squares.length < maxSquares && elapsedTime < gameDuration) {
+            const isSpecial = Math.floor(Math.random() * inispecial[op]) === 0;
+            if ((op === 3)&&(catcher === false)) {  //mode in Developement
+                catcher=true;
+                squarecathcer={
+                    x: Math.random() * (canvas.width - squareSize),
+                    y: Math.random() * (canvas.height - squareSize),
+                    speed: ascspeed[op],
+                };
+            }
+            const square = {
+                if (isSpecial && !specialSquare) {
+                    square.color = 'gold';
+                    square.points = 100 * ascpoints[op];
+                    specialSquare = square;
+                } 
+            }
 
-    if (elapsedTime * 1000 % spawnInterval < 16.67) {
-        spawnSquare();
-    }
 
-    squares.forEach(square => {
-        square.y += inispecial[op];
-        ctx.fillStyle = square.color;
-        ctx.fillRect(square.x, square.y, square.size, square.size);
-        if (square.y > canvas.height) {
-            endGame();
         }
-    });
-
-    squares = squares.filter(square => square.y <= canvas.height);
-
-    saveSession();
+    }
 }
 
 function spawnSquare() {
