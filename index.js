@@ -119,18 +119,54 @@ function startGame() {
                 };
             }
             const square = {
-                if (isSpecial && !specialSquare) {
-                    square.color = 'gold';
-                    square.points = 100 * ascpoints[op];
-                    specialSquare = square;
-                } 
+                x: Math.random() * (canvas.width - squareSize),
+                y: Math.random() * (canvas.height - squareSize),
+                direction: Math.random() < 0.083 ? 'horizontal-right' :
+                    Math.random() < 0.167 ? 'horizontal-left' :
+                    Math.random() < 0.25 ? 'vertical-up' :
+                    Math.random() < 0.333 ? 'vertical-down' :
+                    Math.random() < 0.5 ? 'diagonal-left-up' :
+                    Math.random() < 0.667 ? 'diagonal-left-down' :
+                    Math.random() < 0.833 ? 'diagonal-right-down' : 'diagonal-right-up',
+                speed: Math.floor((Math.random() * 2) + 1) * ascspeed[op],
+            };
+            if (isSpecial && !specialSquare) {
+                square.color = 'gold';
+                square.points = 100 * ascpoints[op];
+                specialSquare = square;
+            } 
+            else {
+                square.color = 'black';
+                square.points = 20 * ascpoints[op];
             }
-
-
+            square.draw = function () {
+                ctx.fillStyle = this.color;
+                ctx.fillRect(this.x, this.y, squareSize, squareSize);
+            };   
+            function addSquareClickListener(square) {
+                if (elapsedTime < gameDuration) {
+                    canvas.addEventListener('click', function(event) {
+                        if (!isPaused) {
+                            const mouseX = event.clientX - canvas.getBoundingClientRect().left;
+                            const mouseY = event.clientY - canvas.getBoundingClientRect().top;
+                            if (mouseX >= square.x && mouseX <= square.x + squareSize && mouseY >= square.y && mouseY <= square.y + squareSize) {
+                                removeSquare(square);
+                            }  
+                        }
+                    });
+                }
+            }
+            if(op != 3){    //bc mode in Developement   //different (to compare between noidea and alltogether)
+                addSquareClickListener(square);
+            }
+            squares.push(square);
         }
     }
 }
-
+function drawCatcher() {    //mode in Developement
+    ctx.fillStyle = 'blue'; 
+    ctx.fillRect(squarecathcer.x, squarecathcer.y, squareSize, squareSize);
+}
 function spawnSquare() {
     const x = Math.random() * (canvas.width - squareSize);
     const y = -squareSize;
