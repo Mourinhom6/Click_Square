@@ -162,11 +162,64 @@ function startGame() {
             squares.push(square);
         }
     }
-}
-function drawCatcher() {    //mode in Developement
-    ctx.fillStyle = 'blue'; 
-    ctx.fillRect(squarecathcer.x, squarecathcer.y, squareSize, squareSize);
-}
+    function removeSquare(square) {
+        if (elapsedTime < gameDuration) {
+            const index = squares.indexOf(square);
+            squares.splice(index, 1);
+            scoreElement.textContent = parseInt(scoreElement.textContent) + (20 * ascpoints[op]);
+            if (square === specialSquare) {
+                specialSquare = null;
+                elapsedTime-= 5*initime[op];
+            }
+            if (squares.length === 0) {
+                scoreElement.textContent = parseInt(scoreElement.textContent) + (100 * ascpoints[op]);
+                elapsedTime-= 5*initime[op];
+                for (let i = 0; i < inichose[op]; i++) {
+                    createSquare();
+                }
+            }
+        }
+    } 
+    function drawCatcher() {    //mode in Developement
+        ctx.fillStyle = 'blue'; 
+        ctx.fillRect(squarecathcer.x, squarecathcer.y, squareSize, squareSize);
+    }
+    function movecatcher(event) {   //mode in Developement
+        if (catcher) { 
+            catcher.x = event.clientX - canvas.getBoundingClientRect().left;
+            catcher.y = event.clientY - canvas.getBoundingClientRect().top;
+            movecatcherBoundaries(); // Ensure the catcher stays within the canvas
+        }
+    }
+    function updateSquarePositions() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        updateTimer();
+        random();
+        if (op === 3) { //bc mode in Developement      // Special mode
+            movecatcherBoundaries();
+            squarecathcer.x += squarecathcer.speed;
+            squarecathcer.y += squarecathcer.speed;
+        
+            for (let i = 0; i < squares.length; i++) {
+                const square = squares[i];
+                // Check for collision with the special mode catcher
+                if (
+                    square.x < squarecathcer.x + squareSize &&
+                    square.x + squareSize > squarecathcer.x &&
+                    square.y < squarecathcer.y + squareSize &&
+                    square.y + squareSize > squarecathcer.y
+                ) {
+                    removeSquare(square);
+                }
+                draw();
+                drawCatcher();
+            }
+        } 
+    }
+
+
+
+
 function spawnSquare() {
     const x = Math.random() * (canvas.width - squareSize);
     const y = -squareSize;
