@@ -350,14 +350,28 @@ function updateScore() {
     document.getElementById("score").innerText = "Score: " + score;
 }
 
+function pauseGame() {
+    isPaused = !isPaused;
+    if(isPaused==false){
+        isMuted = true;
+        muteButton.addEventListener('click', toggleMute);
+        squareInterval = setInterval(updateSquarePositions, 20);
+        createSquareInterval = setInterval(createSquare, 1000);
+    }
+    else{
+        isMuted = false;
+        removeEventListener("click", toggleMute);
+        clearInterval(squareInterval);
+        clearInterval(createSquareInterval)
+    }
+    toggleMute();
+}
+
 function updateTimer() {
-    timeLeft--;
-    document.getElementById("timer").innerText = "Time: " + timeLeft;
-    if (timeLeft <= 0) {
-        clearInterval(timer);
-        if (op === 3) { // Clear the interval if in special mode
-            clearInterval(squareMoveInterval);
-        }
+    elapsedTime += 0.02; // Adjust this value based on your frame rate
+    const remainingTime = Math.max(0, gameDuration - Math.floor(elapsedTime));
+    timerElement.textContent = remainingTime;
+    if (remainingTime === 0) {
         endGame();
     }
 }
@@ -390,7 +404,7 @@ function loadSession() {
     }
 }
 
-function backMenuFunction() {
+function backMenuFunction() { //Deprecated (see wich works better)
     closeNav();
     document.getElementById("jogo").style.display = "none";
     document.getElementById("menu").style.display = "block";
@@ -432,7 +446,26 @@ function endGame() {
         toggleMute();
         openNav();
 }
+function returnToMenu(){ //!working
+    if(openNav){
+        closeNav();
+    } 
+    music1.pause();
+    music2.pause();
+    music3.pause();
+    music4.pause();
+    isMuted = true; // Mute the music
+    toggleMute();
+    clearInterval(squareInterval);
+    clearInterval(createSquareInterval);
 
+    document.getElementById("jogo").style.display = "none";
+    document.getElementById("dificuldades").style.display = "inline";
+    
+    // if(ishadowrepeat==true){
+    //     startGame();
+    // }
+}
 function updateHighScore() {
     var highScore = localStorage.getItem('highScore') || 0;
     if (score > highScore) {
