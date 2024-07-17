@@ -8,6 +8,7 @@ const muteButton = document.getElementById('mute-button');
 const tryAgain = document.getElementById('try-again-nav');
 const backMenu = document.getElementById('back-menu-nav');
 const leftArrow = document.getElementById('left-arrow');
+
 var op = -1;
 var music1 = new Audio();
 var music2 = new Audio();
@@ -37,25 +38,6 @@ scoreElement.textContent = parseInt(0);
 function sessaolog(){
     window.location.href = "bkoficebig.php";
 }
-const spawnInterval = 1000 / 4;
-const gameEndScore = 0;
-let score = 0;
-let gamePaused = false;
-let gameInterval;
-let gameTimeout;
-
-function openNav() {
-    document.getElementById("myNav").style.height = "100%";
-}
-
-function closeNav() {
-    document.getElementById("myNav").style.height = "0%";
-}
-pauseButton.addEventListener('click', togglePause);
-tryAgain.addEventListener('click', tryAgainFunction);
-backMenu.addEventListener('click', backMenuFunction);
-muteButton.addEventListener('click', toggleMute);
-leftArrow.addEventListener('click', backMenuFunction);
 
 function opcoes() {
     document.getElementById("menu").style.display = "none";
@@ -94,7 +76,7 @@ function startGame() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     document.getElementById("dificuldades").style.display = "none";
     document.getElementById("jogo").style.display = "flex";
-    squarecathcer;
+    squareCatcher;
     elapsedTime = 0;
     squares = [];
     let isPaused = false;
@@ -112,7 +94,7 @@ function startGame() {
             const isSpecial = Math.floor(Math.random() * inispecial[op]) === 0;
             if ((op === 3)&&(catcher === false)) {  //mode in Developement
                 catcher=true;
-                squarecathcer={
+                squareCatcher={
                     x: Math.random() * (canvas.width - squareSize),
                     y: Math.random() * (canvas.height - squareSize),
                     speed: ascspeed[op],
@@ -182,7 +164,7 @@ function startGame() {
     } 
     function drawCatcher() {    //mode in Developement
         ctx.fillStyle = 'blue'; 
-        ctx.fillRect(squarecathcer.x, squarecathcer.y, squareSize, squareSize);
+        ctx.fillRect(squareCatcher.x, squareCatcher.y, squareSize, squareSize);
     }
     function movecatcher(event) {   //mode in Developement
         if (catcher) { 
@@ -197,17 +179,17 @@ function startGame() {
         random();
         if (op === 3) { //bc mode in Developement      // Special mode
             movecatcherBoundaries();
-            squarecathcer.x += squarecathcer.speed;
-            squarecathcer.y += squarecathcer.speed;
+            squareCatcher.x += squareCatcher.speed;
+            squareCatcher.y += squareCatcher.speed;
         
             for (let i = 0; i < squares.length; i++) {
                 const square = squares[i];
                 // Check for collision with the special mode catcher
                 if (
-                    square.x < squarecathcer.x + squareSize &&
-                    square.x + squareSize > squarecathcer.x &&
-                    square.y < squarecathcer.y + squareSize &&
-                    square.y + squareSize > squarecathcer.y
+                    square.x < squareCatcher.x + squareSize &&
+                    square.x + squareSize > squareCatcher.x &&
+                    square.y < squareCatcher.y + squareSize &&
+                    square.y + squareSize > squareCatcher.y
                 ) {
                     removeSquare(square);
                 }
@@ -303,178 +285,120 @@ function startGame() {
         }
     }
     function movecatcherBoundaries(){   //mode in Developement
-        if (squarecathcer.x < 0) {squarecathcer.x = 0;}
-        if (squarecathcer.x + squareSize > canvas.width) {squarecathcer.x = canvas.width - squareSize;}
-        if (squarecathcer.y < 0) {squarecathcer.y = 0;}
-        if (squarecathcer.y + squareSize > canvas.height) {squarecathcer.y = canvas.height - squareSize;}
+        if (squareCatcher.x < 0) {squareCatcher.x = 0;}
+        if (squareCatcher.x + squareSize > canvas.width) {squareCatcher.x = canvas.width - squareSize;}
+        if (squareCatcher.y < 0) {squareCatcher.y = 0;}
+        if (squareCatcher.y + squareSize > canvas.height) {squareCatcher.y = canvas.height - squareSize;}
     }
     function random() { //function responsible for turning the game more random
         var randombcolr = Math.floor((Math.random() * inicolor[op]) + 1); //sets a random probabily of inicolor[op]/nºfps
         if (randombcolr == 2) { //related back color
             canvas.style.backgroundColor = colorsort[Math.floor((Math.random() * colorsort.length) + 1)];
         }
-    } 
-}
-
-
-
-
-function spawnSquare() {
-    const x = Math.random() * (canvas.width - squareSize);
-    const y = -squareSize;
-    const color = colorsort[Math.floor(Math.random() * colorsort.length)];
-    squares.push({ x, y, size: squareSize, color });
-}
-
-function placeSquare() {
-    var square = document.getElementById("square");
-    var gameArea = document.getElementById("jogo");
-    var maxWidth = gameArea.clientWidth - square.clientWidth;
-    var maxHeight = gameArea.clientHeight - square.clientHeight;
-    var randomX = Math.floor(Math.random() * maxWidth);
-    var randomY = Math.floor(Math.random() * maxHeight);
-    square.style.left = randomX + "px";
-    square.style.top = randomY + "px";
-}
-
-function handleSquareClick() {
-    score++;
-    document.getElementById('click-sound').play();
-    updateScore();
-    if (op !== 3) { // If not in special mode, place square on click
-        placeSquare();
     }
-}
-
-function updateScore() {
-    document.getElementById("score").innerText = "Score: " + score;
-}
-
-function pauseGame() {
-    isPaused = !isPaused;
-    if(isPaused==false){
-        isMuted = true;
-        muteButton.addEventListener('click', toggleMute);
-        squareInterval = setInterval(updateSquarePositions, 20);
-        createSquareInterval = setInterval(createSquare, 1000);
+    
+    function toggleMute() {
+        isMuted = !isMuted;
+        music1.muted = isMuted;
+        music2.muted = isMuted;
+        music3.muted = isMuted;
+        music4.muted = isMuted;
+        muteButton.src = isMuted ? 'soundicon.png' : 'sound.png';
     }
-    else{
-        isMuted = false;
-        removeEventListener("click", toggleMute);
+
+    function retryGame() {
+        // ishadowrepeat=true;
+        closeNav(); 
+
+        music1.pause();
+        music2.pause();
+        music3.pause();
+        music4.pause();
+        isMuted = true; 
+        toggleMute();
         clearInterval(squareInterval);
-        clearInterval(createSquareInterval)
+        clearInterval(createSquareInterval);
+
+        startGame();
+        // returnToMenu();
     }
-    toggleMute();
-}
-
-function updateTimer() {
-    elapsedTime += 0.02; // Adjust this value based on your frame rate
-    const remainingTime = Math.max(0, gameDuration - Math.floor(elapsedTime));
-    timerElement.textContent = remainingTime;
-    if (remainingTime === 0) {
-        endGame();
-    }
-}
-
-function saveSession() {
-    const sessionData = {
-        op,
-        score,
-        elapsedTime,
-        squares,
-        music1Time: music1.currentTime,
-        music2Time: music2.currentTime,
-        music3Time: music3.currentTime,
-        music4Time: music4.currentTime
-    };
-    localStorage.setItem('sessionData', JSON.stringify(sessionData));
-}
-
-function loadSession() {
-    const sessionData = JSON.parse(localStorage.getItem('sessionData'));
-    if (sessionData) {
-        op = sessionData.op;
-        score = sessionData.score;
-        elapsedTime = sessionData.elapsedTime;
-        squares = sessionData.squares;
-        music1.currentTime = sessionData.music1Time;
-        music2.currentTime = sessionData.music2Time;
-        music3.currentTime = sessionData.music3Time;
-        music4.currentTime = sessionData.music4Time;
-    }
-}
-
-function backMenuFunction() { //Deprecated (see wich works better)
-    closeNav();
-    document.getElementById("jogo").style.display = "none";
-    document.getElementById("menu").style.display = "block";
-    clearInterval(gameInterval);
-    clearTimeout(gameTimeout);
-    score = 0;
-    elapsedTime = 0;
-    gamePaused = false;
-    squares = [];
-}
-
-function tryAgainFunction() {
-    closeNav();
-    startGame();
-}
-
-function togglePause() {
-    gamePaused = !gamePaused;
-}
-
-function toggleMute() {
-    const isMuted = music1.muted;
-    music1.muted = !isMuted;
-    music2.muted = !isMuted;
-    music3.muted = !isMuted;
-    music4.muted = !isMuted;
-    muteButton.src = isMuted ? 'sound.png' : 'mute.png';
-}
-
-function endGame() {
-    clearInterval(squareInterval);
-    clearTimeout(createSquareInterval);
-    if(op==3){canvas.removeEventListener('click', movecatcher);}   //mode in Developement
+  
+    function returnToMenu(){ //!working
+        if(openNav){
+            closeNav();
+        } 
         music1.pause();
         music2.pause();
         music3.pause();
         music4.pause();
         isMuted = true; // Mute the music
         toggleMute();
-        openNav();
-}
-function returnToMenu(){ //!working
-    if(openNav){
-        closeNav();
-    } 
-    music1.pause();
-    music2.pause();
-    music3.pause();
-    music4.pause();
-    isMuted = true; // Mute the music
-    toggleMute();
-    clearInterval(squareInterval);
-    clearInterval(createSquareInterval);
+        clearInterval(squareInterval);
+        clearInterval(createSquareInterval);
 
-    document.getElementById("jogo").style.display = "none";
-    document.getElementById("dificuldades").style.display = "inline";
-    
-    // if(ishadowrepeat==true){
-    //     startGame();
-    // }
-}
-function updateHighScore() {
-    var highScore = localStorage.getItem('highScore') || 0;
-    if (score > highScore) {
-        highScore = score;
-        localStorage.setItem('highScore', highScore);
+        document.getElementById("jogo").style.display = "none";
+        document.getElementById("dificuldades").style.display = "inline";
+        
+        // if(ishadowrepeat==true){
+        //     startGame();
+        // }
     }
-    document.getElementById("high-score").innerText = "High Score: " + highScore;
-}
-function restartGame() {
-    document.getElementById("game-over").style.display = "none";
-    document.getElementById("menu").style.display = "inline";
+
+    function updateTimer() {
+        elapsedTime += 0.02; // Adjust this value based on your frame rate
+        const remainingTime = Math.max(0, gameDuration - Math.floor(elapsedTime));
+        timerElement.textContent = remainingTime;
+        if (remainingTime === 0) {
+            endGame();
+        }
+    }
+
+    function endGame() {
+        clearInterval(squareInterval);
+        clearInterval(createSquareInterval);
+        if(op==3){canvas.removeEventListener('click', movecatcher);}   //mode in Developement
+            music1.pause();
+            music2.pause();
+            music3.pause();
+            music4.pause();
+            isMuted = true; // Mute the music
+            toggleMute();
+            openNav();
+    }
+    function openNav() {
+        navopen=true;
+        document.getElementById("myNav").style.height = "100%";
+        document.getElementById("pontfn").innerHTML = scoreElement.textContent;
+    }
+    
+    function closeNav() {
+        navopen=false;
+        document.getElementById("myNav").style.height = "0%";
+    }
+    function pauseGame() {
+        isPaused = !isPaused;
+        if(isPaused==false){
+            isMuted = true;
+            muteButton.addEventListener('click', toggleMute);
+            squareInterval = setInterval(updateSquarePositions, 20);
+            createSquareInterval = setInterval(createSquare, 1000);
+        }
+        else{
+            isMuted = false;
+            removeEventListener("click", toggleMute);
+            clearInterval(squareInterval);
+            clearInterval(createSquareInterval)
+        }
+        toggleMute();
+    }
+    
+    squareInterval = setInterval(updateSquarePositions, 20);
+    createSquareInterval = setInterval(createSquare, 1000);
+
+    if(op==3){canvas.addEventListener('click', movecatcher);} 
+    muteButton.addEventListener('click', toggleMute);
+    pauseButton.addEventListener('click', pauseGame);
+    backMenu.addEventListener('click', returnToMenu);
+    tryAgain.addEventListener('click', retryGame);
+    leftArrow.addEventListener('click', returnToMenu);
 }
